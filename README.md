@@ -8,6 +8,23 @@ dead animals, signal/sign failures, debris, or anything else in the road.
 Built with **Expo SDK 52 + React Native + TypeScript** and **expo-router**.
 Runs on Android, iOS, and web.
 
+## 📱 Install on Android
+
+**[⬇️ Download the APK](https://expo.dev/accounts/budvenky/projects/potholepal-stl/builds/ed36ef41-3951-465d-bf76-28586a75fcb1)**
+
+1. On your Android phone, open the link above and tap **Download** (or scan the QR
+   code on that page with your phone's camera).
+2. Open the downloaded `.apk` file. Android will warn that it's from an unknown
+   source — tap **Settings → allow from this source** (or **Install anyway**), then
+   go back and tap **Install**. This is normal for apps installed outside the Play
+   Store.
+3. Open **HazardHub** and allow **location** and **camera** access when prompted —
+   the app needs them to pin the hazard and photograph it.
+
+> Android only. iOS requires a signed build through the App Store / TestFlight,
+> which isn't set up yet. On any device you can also try the web build
+> (`npm run web`), though camera and GPS are limited in the browser.
+
 ## Why
 
 Reporting a road hazard in St. Louis is split across three agencies (by who owns the
@@ -64,6 +81,11 @@ npm test
 ```bash
 ./build-apk.sh     # pins Node 20, runs eas login/init/build -p android --profile preview
 ```
+
+This runs an **EAS cloud build** (nothing is written to this folder). When it
+finishes, EAS prints a build URL with a **Download** button + QR code — that's the
+`.apk` end users install (see [Install on Android](#-install-on-android) above). List
+past builds and their download links with `eas build:list --platform android`.
 
 ## Data sources
 

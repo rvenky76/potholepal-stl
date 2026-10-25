@@ -43,6 +43,31 @@ export const colors: Palette = darkColors;
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 } as const;
 export const radius = { sm: 8, md: 12, lg: 18 } as const;
 
+/**
+ * Inter font families (loaded in the root layout). Robinhood-style: a clean
+ * geometric sans with confident weight contrast. Falls back to the system font
+ * until the webfonts finish loading.
+ */
+export const fonts = {
+  regular: 'Inter_400Regular',
+  medium: 'Inter_500Medium',
+  semibold: 'Inter_600SemiBold',
+  bold: 'Inter_700Bold',
+  extrabold: 'Inter_800ExtraBold',
+} as const;
+
+/** Type scale — display for hero numbers/titles, body for content, caption for meta. */
+export const type = {
+  display: { fontFamily: fonts.extrabold, fontSize: 30, letterSpacing: -0.5 },
+  title: { fontFamily: fonts.bold, fontSize: 22, letterSpacing: -0.3 },
+  heading: { fontFamily: fonts.semibold, fontSize: 17, letterSpacing: -0.2 },
+  body: { fontFamily: fonts.regular, fontSize: 16, letterSpacing: -0.1 },
+  bodyMedium: { fontFamily: fonts.medium, fontSize: 16, letterSpacing: -0.1 },
+  label: { fontFamily: fonts.semibold, fontSize: 15, letterSpacing: -0.1 },
+  caption: { fontFamily: fonts.medium, fontSize: 13 },
+  overline: { fontFamily: fonts.bold, fontSize: 12, letterSpacing: 0.6, textTransform: 'uppercase' as const },
+} as const;
+
 export type ThemeMode = 'dark' | 'light' | 'system';
 
 interface ThemeContextValue {

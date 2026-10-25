@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { FlatList, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, Linking, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { PotholeReport } from '@/types/report';
@@ -7,8 +7,8 @@ import { HAZARDS } from '@/types/report';
 import { AGENCIES } from '@/data/agencies';
 import { mapsLink } from '@/data/report';
 import { useStore } from '@/store/AppStore';
-import { Card } from '@/ui/components';
-import { radius, spacing, useTheme, type Palette } from '@/ui/theme';
+import { Card, IconButton } from '@/ui/components';
+import { radius, spacing, type, useTheme, type Palette } from '@/ui/theme';
 
 export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
@@ -61,22 +61,12 @@ function Row({ report, onDelete }: { report: PotholeReport; onDelete: () => void
       </View>
       <View style={styles.actions}>
         {maps ? (
-          <Pressable onPress={() => Linking.openURL(maps)} accessibilityRole="button" style={styles.action}>
-            <Text style={styles.actionText}>🗺️ Map</Text>
-          </Pressable>
+          <IconButton icon="map" label="Map" onPress={() => Linking.openURL(maps)} />
         ) : null}
         {target.phone ? (
-          <Pressable
-            onPress={() => Linking.openURL(`tel:${target.phone}`)}
-            accessibilityRole="button"
-            style={styles.action}
-          >
-            <Text style={styles.actionText}>📞 Call</Text>
-          </Pressable>
+          <IconButton icon="call" label="Call" onPress={() => Linking.openURL(`tel:${target.phone}`)} />
         ) : null}
-        <Pressable onPress={onDelete} accessibilityRole="button" accessibilityLabel="Delete report" style={styles.action}>
-          <Text style={[styles.actionText, { color: colors.danger }]}>🗑 Delete</Text>
-        </Pressable>
+        <IconButton icon="trash" label="Delete" tone="danger" onPress={onDelete} />
       </View>
     </Card>
   );
@@ -85,12 +75,10 @@ function Row({ report, onDelete }: { report: PotholeReport; onDelete: () => void
 const makeStyles = (colors: Palette) =>
   StyleSheet.create({
     empty: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.bg, padding: spacing.xl, gap: spacing.sm },
-    emptyTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
-    muted: { color: colors.textMuted, fontSize: 13, lineHeight: 18 },
+    emptyTitle: { ...type.title, color: colors.text },
+    muted: { ...type.caption, color: colors.textMuted, lineHeight: 18 },
     thumb: { width: 64, height: 64, borderRadius: radius.sm },
-    title: { color: colors.text, fontSize: 16, fontWeight: '700' },
-    meta: { color: colors.textMuted, fontSize: 12, marginTop: 4 },
-    actions: { flexDirection: 'row', gap: spacing.md, marginTop: spacing.md },
-    action: { paddingVertical: spacing.xs },
-    actionText: { color: colors.accent, fontWeight: '700', fontSize: 14 },
+    title: { ...type.heading, color: colors.text },
+    meta: { ...type.caption, fontSize: 12, color: colors.textMuted, marginTop: 4 },
+    actions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md, flexWrap: 'wrap' },
   });

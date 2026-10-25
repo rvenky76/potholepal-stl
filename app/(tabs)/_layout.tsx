@@ -1,11 +1,14 @@
+import React from 'react';
 import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-import { useTheme } from '@/ui/theme';
+import { fonts, useTheme } from '@/ui/theme';
 
-function icon(symbol: string) {
-  return ({ color }: { color: string }) => (
-    <Text style={{ fontSize: 20, color }}>{symbol}</Text>
+type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
+
+function icon(name: IoniconName) {
+  return ({ color, size }: { color: string; size: number }) => (
+    <Ionicons name={name} size={size ?? 22} color={color} />
   );
 }
 
@@ -16,7 +19,9 @@ export default function TabsLayout() {
       screenOptions={{
         headerStyle: { backgroundColor: colors.bg },
         headerTintColor: colors.text,
+        headerTitleStyle: { fontFamily: fonts.bold, letterSpacing: -0.3 },
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
+        tabBarLabelStyle: { fontFamily: fonts.semibold, fontSize: 11 },
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textMuted,
         sceneStyle: { backgroundColor: colors.bg },
@@ -24,15 +29,15 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: 'Report a road hazard', tabBarLabel: 'Report', tabBarIcon: icon('🚧') }}
+        options={{ title: 'Report a road hazard', tabBarLabel: 'Report', tabBarIcon: icon('warning') }}
       />
       <Tabs.Screen
         name="history"
-        options={{ title: 'My reports', tabBarLabel: 'History', tabBarIcon: icon('📋') }}
+        options={{ title: 'My reports', tabBarLabel: 'History', tabBarIcon: icon('time') }}
       />
       <Tabs.Screen
         name="settings"
-        options={{ title: 'Settings', tabBarLabel: 'Settings', tabBarIcon: icon('⚙️') }}
+        options={{ title: 'Settings', tabBarLabel: 'Settings', tabBarIcon: icon('settings') }}
       />
     </Tabs>
   );

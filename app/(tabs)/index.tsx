@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
 
 import type { Agency, HazardType, PotholeReport, Severity } from '@/types/report';
 import { HAZARDS } from '@/types/report';
@@ -20,7 +21,7 @@ import { resolveCurrentLocation } from '@/data/location';
 import { composeReportText, formLink, mailtoLink, mapsLink, telLink } from '@/data/report';
 import { useStore } from '@/store/AppStore';
 import { Card, PrimaryButton, SectionTitle } from '@/ui/components';
-import { radius, spacing, useTheme, type Palette } from '@/ui/theme';
+import { radius, spacing, type, useTheme, type Palette } from '@/ui/theme';
 
 const SEVERITIES: { value: Severity; label: string }[] = [
   { value: 'small', label: 'Small' },
@@ -154,7 +155,7 @@ export default function ReportScreen() {
     >
       {/* 1. Hazard type */}
       <Card>
-        <SectionTitle>1 · What are you reporting?</SectionTitle>
+        <SectionTitle icon="alert-circle">1 · What are you reporting?</SectionTitle>
         <View style={styles.rowButtons}>
           {HAZARD_ORDER.map((h) => {
             const meta = HAZARDS[h];
@@ -179,7 +180,7 @@ export default function ReportScreen() {
 
       {/* 2. Photo */}
       <Card>
-        <SectionTitle>2 · Photo (optional)</SectionTitle>
+        <SectionTitle icon="camera">2 · Photo (optional)</SectionTitle>
         {photoUri ? (
           <Image source={{ uri: photoUri }} style={styles.photo} accessibilityLabel={`${HAZARDS[hazardType].label} photo`} />
         ) : (
@@ -189,10 +190,10 @@ export default function ReportScreen() {
         )}
         <View style={styles.rowButtons}>
           <View style={{ flex: 1 }}>
-            <PrimaryButton label="📷 Take photo" onPress={takePhoto} />
+            <PrimaryButton label="Take photo" icon="camera" onPress={takePhoto} />
           </View>
           <View style={{ flex: 1 }}>
-            <PrimaryButton label="🖼️ Choose" tone="surface" onPress={pickPhoto} />
+            <PrimaryButton label="Choose" icon="images" tone="surface" onPress={pickPhoto} />
           </View>
         </View>
         {photoMsg ? (
@@ -207,12 +208,15 @@ export default function ReportScreen() {
 
       {/* 3. Location */}
       <Card>
-        <SectionTitle>3 · Location</SectionTitle>
+        <SectionTitle icon="location">3 · Location</SectionTitle>
         {loc ? (
           <>
-            <Text style={styles.body}>
-              📍 {loc.latitude.toFixed(5)}, {loc.longitude.toFixed(5)}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Ionicons name="location" size={18} color={colors.accent} />
+              <Text style={styles.body}>
+                {loc.latitude.toFixed(5)}, {loc.longitude.toFixed(5)}
+              </Text>
+            </View>
             {address ? <Text style={styles.muted}>{address}</Text> : null}
             <Text style={styles.muted}>
               {county ? `County: ${county}` : 'County not resolved'}
@@ -229,7 +233,11 @@ export default function ReportScreen() {
               <Text style={styles.muted}>Getting your location…</Text>
             </View>
           ) : (
-            <PrimaryButton label={loc ? '📍 Update location' : '📍 Use my location'} onPress={getLocation} />
+            <PrimaryButton
+              label={loc ? 'Update location' : 'Use my location'}
+              icon="navigate"
+              onPress={getLocation}
+            />
           )}
         </View>
         {locMsg ? <Text style={[styles.muted, { color: colors.warn, marginTop: spacing.sm }]}>{locMsg}</Text> : null}
@@ -237,7 +245,7 @@ export default function ReportScreen() {
 
       {/* 4. Severity */}
       <Card>
-        <SectionTitle>4 · How bad is it?</SectionTitle>
+        <SectionTitle icon="speedometer">4 · How bad is it?</SectionTitle>
         <View style={styles.rowButtons}>
           {SEVERITIES.map((s) => (
             <Pressable
@@ -256,7 +264,7 @@ export default function ReportScreen() {
 
       {/* 5. Details */}
       <Card>
-        <SectionTitle>5 · Details (optional)</SectionTitle>
+        <SectionTitle icon="create">5 · Details (optional)</SectionTitle>
         <TextInput
           value={note}
           onChangeText={setNote}
@@ -270,7 +278,7 @@ export default function ReportScreen() {
 
       {/* 6. Who to report to */}
       <Card>
-        <SectionTitle>6 · Report to</SectionTitle>
+        <SectionTitle icon="git-branch">6 · Report to</SectionTitle>
         <Text style={styles.body}>{target.name}</Text>
         <Text style={styles.muted}>{target.covers}</Text>
         <Text style={[styles.muted, { marginTop: spacing.xs }]}>
@@ -295,7 +303,7 @@ export default function ReportScreen() {
 
       {/* 7. Send */}
       <Card>
-        <SectionTitle>7 · Send your report</SectionTitle>
+        <SectionTitle icon="send">7 · Send your report</SectionTitle>
         <Text style={[styles.muted, { marginBottom: spacing.sm }]}>
           HazardHub prepares the full report. Pick how to send it — it opens the agency with your
           details ready (attach the photo when prompted).
@@ -303,19 +311,22 @@ export default function ReportScreen() {
         <View style={{ gap: spacing.sm }}>
           {target.formUrl ? (
             <PrimaryButton
-              label="📝 Open the report form"
+              label="Open the report form"
+              icon="document-text"
               onPress={() => handOff('form')}
               disabled={!canReport}
             />
           ) : null}
           <PrimaryButton
-            label={`📞 Call ${target.phoneDisplay ?? 'the agency'}`}
+            label={`Call ${target.phoneDisplay ?? 'the agency'}`}
+            icon="call"
             tone="surface"
             onPress={() => handOff('call')}
             disabled={!canReport}
           />
           <PrimaryButton
-            label="🗺️ Open the spot in Maps"
+            label="Open the spot in Maps"
+            icon="map"
             tone="surface"
             onPress={() => handOff('maps')}
             disabled={!loc}
@@ -333,8 +344,8 @@ export default function ReportScreen() {
 
 const makeStyles = (colors: Palette) =>
   StyleSheet.create({
-    body: { color: colors.text, fontSize: 16 },
-    muted: { color: colors.textMuted, fontSize: 13, lineHeight: 18 },
+    body: { ...type.body, color: colors.text },
+    muted: { ...type.caption, color: colors.textMuted, lineHeight: 18 },
     center: { alignItems: 'center', gap: spacing.sm },
     photo: { width: '100%', height: 200, borderRadius: radius.md, marginBottom: spacing.md },
     photoPlaceholder: {
@@ -367,9 +378,10 @@ const makeStyles = (colors: Palette) =>
       borderColor: colors.border,
       alignItems: 'center',
     },
-    sevText: { color: colors.text, fontWeight: '700' },
+    sevText: { ...type.label, color: colors.text },
     sevTextActive: { color: colors.bg },
     input: {
+      ...type.body,
       backgroundColor: colors.surfaceAlt,
       borderRadius: radius.sm,
       borderWidth: 1,
