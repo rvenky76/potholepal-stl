@@ -1,0 +1,82 @@
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+
+import type { PotholeReport } from '@/types/report';
+import { KEYS, readJSON, writeJSON } from '@/data/storage';
+
+export interface AppSettings {
+  theme: 'dark' | 'light' | 'system';
+}
+
+const DEFAULT_SETTINGS: AppSettings = { theme: 'system' };
+
+interface StoreValue {
+  settings: AppSettings;
+  reports: PotholeReport[];
+  updateSettings: (patch: Partial<AppSettings>) => void;
+  saveReport: (r: PotholeReport) => void;
+  deleteReport: (id: string) => void;
+}
+
+const StoreContext = createContext<StoreValue | null>(null);
+
+export function AppProvider({ children }: { children: React.ReactNode }) {
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const [reports, setReports] = useState<PotholeReport[]>([]);
+  const hydrated = useRef(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const [s, r] = await Promise.all([
+        readJSON<AppSettings>(KEYS.settings, DEFAULT_SETTINGS),
+        readJSON<PotholeReport[]>(KEYS.reports, []),
+      ]);
+      if (cancelled) return;
+      setSettings({ ...DEFAULT_SETTINGS, ...s });
+      setReports(r);
+      hydrated.current = true;
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (hydrated.current) void writeJSON(KEYS.settings, settings);
+  }, [settings]);
+  useEffect(() => {
+    if (hydrated.current) void writeJSON(KEYS.reports, reports);
+  }, [reports]);
+
+  const updateSettings = useCallback((patch: Partial<AppSettings>) => {
+    setSettings((prev) => ({ ...prev, ...patch }));
+  }, []);
+
+  const saveReport = useCallback((r: PotholeReport) => {
+    setReports((prev) => [r, ...prev.filter((x) => x.id !== r.id)]);
+  }, []);
+
+  const deleteReport = useCallback((id: string) => {
+    setReports((prev) => prev.filter((x) => x.id !== id));
+  }, []);
+
+  const value = useMemo<StoreValue>(
+    () => ({ settings, reports, updateSettings, saveReport, deleteReport }),
+    [settings, reports, updateSettings, saveReport, deleteReport],
+  );
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+}
+
+export function useStore(): StoreValue {
+  const ctx = useContext(StoreContext);
+  if (!ctx) throw new Error('useStore must be used within AppProvider');
+  return ctx;
+}

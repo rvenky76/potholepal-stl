@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "PotholePal STL",
+    "slug": "potholepal-stl",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "potholepal",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#15202B"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "PotholePal uses your location to pin where the pothole is and find the right county to report it to.",
+        "NSCameraUsageDescription": "PotholePal uses the camera so you can photograph the pothole for your report.",
+        "NSPhotoLibraryUsageDescription": "PotholePal lets you attach a photo of the pothole from your library."
+      }
+    },
+    "android": {
+      "package": "com.potholepal.stl",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION", "CAMERA"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#15202B"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "PotholePal uses your location to pin where the pothole is and find the right county to report it to."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "PotholePal lets you attach a photo of the pothole from your library.",
+          "cameraPermission": "PotholePal uses the camera so you can photograph the pothole for your report."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
