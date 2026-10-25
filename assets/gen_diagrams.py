@@ -100,4 +100,36 @@ def d3():
     img.save(os.path.join(OUT,'03-arch.png'))
 
 
-d1(); d2(); d3(); print('Wrote 3 diagrams to', OUT)
+# 4: illustrative hazard-map mock (represents the native MapView with pins)
+def d4():
+    img,d=canvas(); title(d,'Reports on a hazard map','Illustrative — the app plots your located reports')
+    mx,my,mw,mh=200,190,1200,560
+    # map panel + faux streets
+    box(d,mx,my,mw,mh,fill=SURFACE,outline=BORDER,width=2,r=24)
+    for gx in range(mx+90,mx+mw-40,150):
+        d.line([(gx,my+30),(gx,my+mh-30)],fill=SURFACE2,width=6)
+    for gy in range(my+80,my+mh-30,130):
+        d.line([(mx+40,gy),(mx+mw-40,gy)],fill=SURFACE2,width=6)
+    # a 'river' curve
+    d.line([(mx+mw-260,my+40),(mx+mw-320,my+260),(mx+mw-220,my+mh-40)],fill=(40,70,96),width=18,joint='curve')
+    import math
+    def pin(cx,cy,col,glyph):
+        r=26
+        d.ellipse([cx-r,cy-r-10,cx+r,cy+r-10],fill=col)
+        d.polygon([(cx-14,cy+6),(cx+14,cy+6),(cx,cy+30)],fill=col)
+        d.ellipse([cx-10,cy-20,cx+10,cy],fill=BG)
+        ctext(d,cx,cy-20,glyph,font(18,True),col)
+    # hazard pins (accent) + urgent pins (red)
+    RED=(235,87,87)
+    pins=[(mx+260,my+170,ACCENT),(mx+470,my+330,ACCENT),(mx+700,my+210,ACCENT),
+          (mx+560,my+470,RED),(mx+880,my+400,ACCENT),(mx+980,my+240,RED),(mx+360,my+470,ACCENT)]
+    for cx,cy,col in pins: pin(cx,cy,col,'')
+    # legend
+    lx,ly=mx+40,my+mh-70
+    d.ellipse([lx,ly,lx+26,ly+26],fill=ACCENT); ltext(d,lx+36,ly,'Hazard',font(22),MUTED)
+    d.ellipse([lx+190,ly,lx+216,ly+26],fill=RED); ltext(d,lx+226,ly,'Urgent incident (accident / power line)',font(22),MUTED)
+    ctext(d,W/2,my+mh+40,'Today the map shows your own reports; a shared community feed is the next phase.',font(20),MUTED)
+    img.save(os.path.join(OUT,'04-map.png'))
+
+
+d1(); d2(); d3(); d4(); print('Wrote 4 diagrams to', OUT)

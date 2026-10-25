@@ -3,15 +3,19 @@
 ## What is your app and what does it do?
 
 **HazardHub STL** turns reporting a road hazard from a frustrating chore into a
-15-second task. Pick what you're reporting — a pothole, a downed tree or limb,
-flooding over the road, a dead animal, a dead traffic signal or street light, a
-knocked-down sign, or debris — take a photo, and tap "Use my
-location" — the app pins the exact GPS spot, figures out which county you're in,
-and routes your report to the right agency (the City of St. Louis, St. Louis
-County, or MoDOT for state highways). Then it hands you a fully-written report and
-opens the agency's form, phone, or map so you can send it in one tap. It started as a
-pothole reporter (the single most common road complaint) and the same capture →
-locate → route → compose flow works for any road hazard.
+15-second task. Pick what you're reporting from **14 types** — maintenance hazards
+(pothole, fallen tree, flooding, dead animal, signal/light failure, downed sign,
+debris, sidewalk damage, storm/ice) or time-sensitive incidents (accident, disabled
+vehicle, road closure, downed power line) — take a photo, and tap "Use my location."
+The app pins the exact GPS spot, figures out which county you're in, and routes your
+report to the right agency (the City of St. Louis, St. Louis County, or MoDOT for
+state highways). Then it hands you a fully-written report and opens the agency's form,
+phone, or map so you can send it in one tap. Your located reports also plot as
+color-coded pins on an interactive **hazard map**. For life-safety cases — an accident
+with injuries or a downed power line — the app shows a safety warning and a one-tap
+**Call 911** button, and is explicit that it does not dispatch help itself. It started
+as a pothole reporter (the single most common road complaint) and the same capture →
+locate → route → compose flow now works for any road hazard or incident.
 
 ## What problem does it solve, and why does it matter?
 
@@ -45,9 +49,15 @@ codebase for Android, iOS, and web.
 - **Report composer + hand-off.** It formats a complete report (coordinates,
   address, county, severity, note) and opens the agency's web form, a `tel:` call, or
   the exact spot in Maps. Every report is saved to a local **History** list.
+- **Hazard map.** Saved reports with a location plot as color-coded markers on an
+  interactive map (`react-native-maps` on device), auto-fitting to the reports; the
+  web build falls back to a located-report list since that library is native-only.
+- **Life-safety handling.** Accidents and downed power lines are flagged urgent — the
+  app shows a safety banner and a one-tap **Call 911** button, and states plainly that
+  it does not dispatch emergency help.
 - **Accessible, themed, offline-tolerant.** Screen-reader labels and selected-state
-  on every control, a light / dark / **system** theme, and AsyncStorage-persisted
-  history and settings.
+  on every control, a light / dark / **system** theme with Inter typography, and
+  AsyncStorage-persisted history and settings.
 
 ## An honest note on "reporting"
 
@@ -73,11 +83,16 @@ seams between systems rather than hiding them.
 
 ## What would I add next?
 
+- **On-device AI photo classification** — suggest the hazard type and a severity
+  estimate from the photo (an honest *suggestion* the user can override).
 - A roads dataset so routing is exact per-street, not just per-county.
-- Status follow-up (store the agency's confirmation number, remind to re-check).
-- More hazard categories (e.g. missing curb cuts — an accessibility angle) on top
-  of the potholes, trees, flooding, dead animals, signal/sign failures, and debris
-  the app already covers.
+- A shared backend so the hazard map becomes **community-wide** (today it shows your
+  own reports), plus status follow-up and notifications to nearby users.
+- A municipal dashboard for agencies to triage reports and measure response time.
+
+These later phases need a server and real multi-user data, so today the map plots the
+reports saved on *your* device — I've kept the app honest about that rather than
+implying a city-wide live feed.
 
 ---
 

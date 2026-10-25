@@ -2,8 +2,11 @@
 
 Report a St. Louis road hazard in 15 seconds: snap a photo, pin the exact GPS spot,
 and HazardHub figures out the county and routes your report to the right agency —
-City of St. Louis, St. Louis County, or MoDOT. Potholes, downed trees, flooding,
-dead animals, signal/sign failures, debris, or anything else in the road.
+City of St. Louis, St. Louis County, or MoDOT. Covers **14 hazard and incident
+types**: potholes, fallen trees, flooding, dead animals, signal/light failures, downed
+signs, debris, sidewalk damage, storm/ice, and time-sensitive incidents — accidents,
+disabled vehicles, road closures, and downed power lines. Saved reports plot on an
+interactive **hazard map**.
 
 Built with **Expo SDK 52 + React Native + TypeScript** and **expo-router**.
 Runs on Android, iOS, and web.
@@ -35,12 +38,19 @@ potholes (the most common complaint) and now covers any road hazard.
 
 ## Features
 
+- **🧭 14 hazard & incident types** — maintenance hazards (pothole, tree, flooding,
+  dead animal, signal/light, sign, debris, sidewalk, storm/ice) and time-sensitive
+  incidents (accident, disabled vehicle, road closure, downed power line).
+- **🚨 Life-safety handling** — accidents and downed power lines show a safety banner
+  and a one-tap **Call 911** button. The app is explicit that it does *not* dispatch help.
 - **📷 Photo** of the hazard (camera or library).
 - **📍 GPS → county** — one tap resolves your exact spot + address + county on-device.
 - **Severity + details**, then smart **agency routing** (with a one-tap override for highways).
+- **🗺️ Hazard map** — your located reports plotted as color-coded pins (red for urgent
+  incidents) on an interactive map; auto-fits to your reports.
 - **One-tap hand-off** — opens the agency form, dials the phone, or opens the spot in Maps,
   with a fully-composed report ready to send.
-- **History** of your reports, **light/dark/system** theme, screen-reader accessible.
+- **History** of your reports, **light/dark/system** theme, Inter typography, screen-reader accessible.
 
 ## Honest scope
 
@@ -54,16 +64,17 @@ app says so in Settings. Not affiliated with any agency.
 ## Architecture
 
 ```
-app/(tabs)/ index(report) | history | settings
+app/(tabs)/ index(report) | history | map (+ map.web) | settings
 src/
-  types/report.ts         domain model
+  types/report.ts         domain model + 14 hazard/incident types (HAZARDS)
   data/
     agencies.ts           agency directory + county→agency routing
     location.ts           GPS fix + reverse-geocode to county (expo-location)
     report.ts             report-text composer + hand-off links
     storage.ts            AsyncStorage cache
   store/AppStore.tsx      settings (theme) + saved reports
-  ui/ theme.tsx components.tsx
+  ui/ theme.tsx (Inter type scale) | components.tsx (icon buttons) | SplashLogo.tsx
+metro.config.js           web-stubs react-native-maps (native-only) for the web build
 ```
 
 ## Run it

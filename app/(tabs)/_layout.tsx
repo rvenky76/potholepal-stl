@@ -36,6 +36,10 @@ export default function TabsLayout() {
         options={{ title: 'My reports', tabBarLabel: 'History', tabBarIcon: icon('time') }}
       />
       <Tabs.Screen
+        name="map"
+        options={{ title: 'Hazard map', tabBarLabel: 'Map', tabBarIcon: icon('map') }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{ title: 'Settings', tabBarLabel: 'Settings', tabBarIcon: icon('settings') }}
       />

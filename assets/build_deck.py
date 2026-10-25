@@ -60,23 +60,37 @@ s=prs.slides.add_slide(BLANK); bg(s); pic(s,os.path.join(DIA,'01-flow.png'),0.5,
 # 4 screens
 s=prs.slides.add_slide(BLANK); bg(s)
 tb(s,0.9,0.5,11.5,0.9,'What it does',40,TEXT,bold=True); bar(s,x=0.9,y=1.4,w=2.2,h=0.06)
-shots=[('screen-report.png','Capture · locate · route'),('screen-settings.png','Theme · how it works')]
+tb(s,0.9,1.15,11.5,0.5,'14 hazard & incident types  ·  one-tap routing  ·  live hazard map',16,ACCENT)
+shots=[('screen-report.png','14 types · capture · route'),('screen-settings.png','Theme · how it works')]
 x=2.3
 for fn,cap in shots:
     pp=os.path.join(SHOT,fn)
-    if os.path.exists(pp): pic(s,pp,x,1.7,3.6,4.6); tb(s,x,6.35,3.6,0.5,cap,16,ACCENT,bold=True,align=PP_ALIGN.CENTER)
+    if os.path.exists(pp): pic(s,pp,x,1.8,3.6,4.5); tb(s,x,6.35,3.6,0.5,cap,15,ACCENT,bold=True,align=PP_ALIGN.CENTER)
     x+=4.6
-# 5 honest  6 arch
+# 5 breadth
+s=prs.slides.add_slide(BLANK); bg(s)
+tb(s,0.9,0.6,11.5,0.9,'More than potholes',40,TEXT,bold=True); bar(s,x=0.9,y=1.5,w=2.2,h=0.06)
+tb(s,0.9,1.9,6.2,4.8,
+   'One capture \u2192 locate \u2192 route \u2192 compose flow,\nnow across 14 types:\n\n'
+   '\u2022 Maintenance hazards: potholes, trees,\n   flooding, dead animals, signal/light,\n   signs, debris, sidewalk, storm/ice\n'
+   '\u2022 Incidents: accidents, disabled vehicles,\n   road closures, downed power lines\n\n'
+   'Life-safety cases show a warning + one-tap\nCall 911 \u2014 the app says plainly it does\nNOT dispatch help itself.',
+   20,MUTED,ls=1.2)
+mp=os.path.join(DIA,'04-map.png')
+if os.path.exists(mp): pic(s,mp,7.1,1.9,5.9,4.8)
+# 6 honest  7 arch
 for fn in ['02-honest.png','03-arch.png']:
     s=prs.slides.add_slide(BLANK); bg(s); pic(s,os.path.join(DIA,fn),0.5,0.4,12.333,6.7)
-# 7 Close
+# 8 Close
 s=prs.slides.add_slide(BLANK); bg(s); bar(s,y=0,h=0.2)
 tb(s,0.9,1.6,11.5,1.0,'Make reporting so easy people actually do it',34,TEXT,bold=True)
-tb(s,0.9,2.9,11.5,2.6,
-   'A real, installable app that turns a multi-step scavenger hunt into four taps.\n\n'
-   'Next: a roads dataset for exact per-street routing, status follow-up, and other\n'
-   'hazards — downed signs, broken lights, missing curb cuts.',
-   22,MUTED,ls=1.3)
+tb(s,0.9,2.9,11.5,2.8,
+   'A real, installable app that turns a multi-step scavenger hunt into a few taps \u2014\n'
+   'across 14 hazard and incident types, with a map of what\u2019s been reported.\n\n'
+   'Next: on-device AI to suggest the hazard type from the photo, a roads dataset for\n'
+   'exact per-street routing, and a shared backend so the map goes community-wide\n'
+   'with a municipal dashboard for faster agency response.',
+   21,MUTED,ls=1.25)
 tb(s,0.9,6.5,11.5,0.5,'A community reporting assistant. Not affiliated with MoDOT or the City/County.',15,ACCENT)
 
 prs.save(OUT); print('Wrote',OUT,'-',len(prs.slides._sldIdLst),'slides')

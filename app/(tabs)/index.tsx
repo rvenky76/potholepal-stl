@@ -30,7 +30,11 @@ const SEVERITIES: { value: Severity; label: string }[] = [
 ];
 
 const HAZARD_ORDER: HazardType[] = [
-  'pothole', 'tree', 'flooding', 'dead_animal', 'signal', 'sign', 'debris', 'other',
+  // maintenance hazards
+  'pothole', 'tree', 'flooding', 'dead_animal', 'signal', 'sign', 'debris', 'sidewalk', 'storm',
+  // incidents (more time-sensitive)
+  'accident', 'disabled_vehicle', 'road_closure', 'power_line',
+  'other',
 ];
 
 export default function ReportScreen() {
@@ -176,6 +180,29 @@ export default function ReportScreen() {
             );
           })}
         </View>
+        {HAZARDS[hazardType].routeHint ? (
+          <View
+            style={[
+              styles.hint,
+              HAZARDS[hazardType].urgent && { backgroundColor: colors.danger + '22', borderColor: colors.danger },
+            ]}
+          >
+            <Ionicons
+              name={HAZARDS[hazardType].urgent ? 'warning' : 'information-circle'}
+              size={18}
+              color={HAZARDS[hazardType].urgent ? colors.danger : colors.textMuted}
+              style={{ marginRight: 8, marginTop: 1 }}
+            />
+            <Text style={[styles.hintText, HAZARDS[hazardType].urgent && { color: colors.danger }]}>
+              {HAZARDS[hazardType].routeHint}
+            </Text>
+          </View>
+        ) : null}
+        {HAZARDS[hazardType].urgent ? (
+          <View style={{ marginTop: spacing.sm }}>
+            <PrimaryButton label="Call 911" icon="call" tone="danger" onPress={() => Linking.openURL('tel:911')} />
+          </View>
+        ) : null}
       </Card>
 
       {/* 2. Photo */}
@@ -380,6 +407,17 @@ const makeStyles = (colors: Palette) =>
     },
     sevText: { ...type.label, color: colors.text },
     sevTextActive: { color: colors.bg },
+    hint: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      marginTop: spacing.md,
+      padding: spacing.md,
+      borderRadius: radius.sm,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surfaceAlt,
+    },
+    hintText: { ...type.caption, flex: 1, color: colors.textMuted, lineHeight: 18 },
     input: {
       ...type.body,
       backgroundColor: colors.surfaceAlt,

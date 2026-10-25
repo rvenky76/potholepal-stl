@@ -33,6 +33,12 @@ export type HazardType =
   | 'signal'
   | 'sign'
   | 'debris'
+  | 'power_line'
+  | 'sidewalk'
+  | 'storm'
+  | 'accident'
+  | 'disabled_vehicle'
+  | 'road_closure'
   | 'other';
 
 export interface HazardMeta {
@@ -44,6 +50,12 @@ export interface HazardMeta {
   reportNoun: string;
   /** Placeholder detail prompt tuned to this hazard. */
   detailHint: string;
+  /** Grouping for the picker: an immediate-danger incident vs. a maintenance hazard. */
+  group: 'hazard' | 'incident';
+  /** Life-safety hazards that should prompt the user to call 911 first. */
+  urgent?: boolean;
+  /** Short note shown under the picker when this type is selected (honest routing guidance). */
+  routeHint?: string;
 }
 
 export const HAZARDS: Record<HazardType, HazardMeta> = {
@@ -53,6 +65,7 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\ud83d\udd73\ufe0f',
     reportNoun: 'Pothole',
     detailHint: 'Nearest intersection, lane, size\u2026',
+    group: 'hazard',
   },
   tree: {
     type: 'tree',
@@ -60,6 +73,7 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\ud83c\udf33',
     reportNoun: 'Fallen tree or limb in the roadway',
     detailHint: 'Is it blocking a lane? Which direction?',
+    group: 'hazard',
   },
   flooding: {
     type: 'flooding',
@@ -67,6 +81,7 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\ud83c\udf0a',
     reportNoun: 'Water / flooding over the roadway',
     detailHint: 'How deep? Is the road impassable?',
+    group: 'hazard',
   },
   dead_animal: {
     type: 'dead_animal',
@@ -74,6 +89,7 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\ud83e\udd8c',
     reportNoun: 'Dead animal in or beside the roadway',
     detailHint: 'Which lane / shoulder? Large animal (deer)?',
+    group: 'hazard',
   },
   signal: {
     type: 'signal',
@@ -81,6 +97,7 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\ud83d\udea6',
     reportNoun: 'Traffic signal or street light failure',
     detailHint: 'Signal dark? Flashing? Light out?',
+    group: 'hazard',
   },
   sign: {
     type: 'sign',
@@ -88,6 +105,7 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\ud83e\udea7',
     reportNoun: 'Damaged, missing, or knocked-down sign',
     detailHint: 'Stop sign? Which direction / intersection?',
+    group: 'hazard',
   },
   debris: {
     type: 'debris',
@@ -95,6 +113,59 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\ud83e\uddf1',
     reportNoun: 'Debris / object in the roadway',
     detailHint: 'What is it? Blocking a lane?',
+    group: 'hazard',
+  },
+  sidewalk: {
+    type: 'sidewalk',
+    label: 'Sidewalk',
+    emoji: '\ud83e\uddcd',
+    reportNoun: 'Damaged or blocked sidewalk',
+    detailHint: 'Cracked, heaved, blocked? Accessibility issue?',
+    group: 'hazard',
+  },
+  storm: {
+    type: 'storm',
+    label: 'Storm / ice',
+    emoji: '\u26c8\ufe0f',
+    reportNoun: 'Storm or ice hazard on the roadway',
+    detailHint: 'Ice, snow, flooding, wind damage?',
+    group: 'hazard',
+  },
+  power_line: {
+    type: 'power_line',
+    label: 'Power line',
+    emoji: '\u26a1',
+    reportNoun: 'Downed power line',
+    detailHint: 'Stay well back. Is it sparking / across the road?',
+    group: 'incident',
+    urgent: true,
+    routeHint: 'A downed power line is dangerous \u2014 call 911 first, then the utility. Do not go near it.',
+  },
+  accident: {
+    type: 'accident',
+    label: 'Accident',
+    emoji: '\ud83d\ude98',
+    reportNoun: 'Traffic accident',
+    detailHint: 'Injuries? Lanes blocked? How many vehicles?',
+    group: 'incident',
+    urgent: true,
+    routeHint: 'If anyone is hurt or lanes are blocked, call 911 first. This app does not dispatch help.',
+  },
+  disabled_vehicle: {
+    type: 'disabled_vehicle',
+    label: 'Disabled vehicle',
+    emoji: '\ud83d\ude97',
+    reportNoun: 'Disabled vehicle on the roadway',
+    detailHint: 'Blocking a lane or on the shoulder? Hazards on?',
+    group: 'incident',
+  },
+  road_closure: {
+    type: 'road_closure',
+    label: 'Road closure',
+    emoji: '\ud83d\udeab',
+    reportNoun: 'Road closure or blockage',
+    detailHint: 'What\u2019s blocking it? Full or partial closure?',
+    group: 'incident',
   },
   other: {
     type: 'other',
@@ -102,6 +173,7 @@ export const HAZARDS: Record<HazardType, HazardMeta> = {
     emoji: '\u26a0\ufe0f',
     reportNoun: 'Road hazard',
     detailHint: 'Describe the hazard and exact spot\u2026',
+    group: 'hazard',
   },
 };
 
