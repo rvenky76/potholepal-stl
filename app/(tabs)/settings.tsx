@@ -42,13 +42,14 @@ export default function SettingsScreen() {
       <Card>
         <SectionTitle>How reporting works</SectionTitle>
         <Text style={styles.body}>
-          PotholePal does the hard part — a photo, your exact GPS spot, and the county — then opens
-          the right agency with your report ready to send. It does not submit on your behalf (the
-          agencies have no app or API), so you tap the final send.
+          HazardHub does the hard part — a photo, your exact GPS spot, and the county — then opens
+          the right agency with your report ready to send. Report potholes, downed trees, flooding,
+          dead animals, signal or sign failures, debris, or any road hazard. None of them has a
+          St. Louis reporting app or public API to submit through, so you tap the final send yourself.
         </Text>
         <Text style={[styles.body, { marginTop: spacing.sm }]}>
           Road ownership is split: the City of St. Louis, St. Louis County, and MoDOT (state
-          highways) each handle their own roads. PotholePal makes its best guess and lets you switch
+          highways) each handle their own roads. HazardHub makes its best guess and lets you switch
           if you know it's a highway.
         </Text>
         <Pressable onPress={() => Linking.openURL('tel:18882756636')} accessibilityRole="button">
@@ -57,7 +58,7 @@ export default function SettingsScreen() {
       </Card>
 
       <Text style={styles.footer}>
-        PotholePal STL · a community reporting assistant. Not affiliated with MoDOT or the City/County
+        HazardHub STL · a community reporting assistant. Not affiliated with MoDOT or the City/County
         of St. Louis.
       </Text>
     </ScrollView>

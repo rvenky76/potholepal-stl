@@ -3,6 +3,7 @@ import { FlatList, Image, Linking, Pressable, StyleSheet, Text, View } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { PotholeReport } from '@/types/report';
+import { HAZARDS } from '@/types/report';
 import { AGENCIES } from '@/data/agencies';
 import { mapsLink } from '@/data/report';
 import { useStore } from '@/store/AppStore';
@@ -41,6 +42,7 @@ function Row({ report, onDelete }: { report: PotholeReport; onDelete: () => void
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const target = AGENCIES[report.target];
   const maps = mapsLink(report);
+  const hazard = HAZARDS[report.hazardType ?? 'pothole'];
   return (
     <Card>
       <View style={{ flexDirection: 'row', gap: spacing.md }}>
@@ -48,9 +50,11 @@ function Row({ report, onDelete }: { report: PotholeReport; onDelete: () => void
           <Image source={{ uri: report.photoUri }} style={styles.thumb} accessibilityLabel="Report photo" />
         ) : null}
         <View style={{ flex: 1 }}>
-          <Text style={styles.title}>{report.address ?? report.note ?? 'Pothole report'}</Text>
+          <Text style={styles.title}>
+            {hazard.emoji} {report.address ?? report.note ?? hazard.reportNoun}
+          </Text>
           <Text style={styles.muted}>
-            {report.severity} · {report.county ?? 'county n/a'} · → {target.name}
+            {hazard.label} · {report.severity} · {report.county ?? 'county n/a'} · → {target.name}
           </Text>
           <Text style={styles.meta}>{new Date(report.createdAt).toLocaleString()}</Text>
         </View>

@@ -1,22 +1,24 @@
-# PotholePal STL
+# HazardHub STL
 
-Report a St. Louis pothole in 15 seconds: snap a photo, pin the exact GPS spot,
-and PotholePal figures out the county and routes your report to the right agency —
-City of St. Louis, St. Louis County, or MoDOT.
+Report a St. Louis road hazard in 15 seconds: snap a photo, pin the exact GPS spot,
+and HazardHub figures out the county and routes your report to the right agency —
+City of St. Louis, St. Louis County, or MoDOT. Potholes, downed trees, flooding,
+dead animals, signal/sign failures, debris, or anything else in the road.
 
 Built with **Expo SDK 52 + React Native + TypeScript** and **expo-router**.
 Runs on Android, iOS, and web.
 
 ## Why
 
-Reporting a pothole in St. Louis is split across three agencies (by who owns the
-road), and none has a real app — just long web forms and phone lines. PotholePal
+Reporting a road hazard in St. Louis is split across three agencies (by who owns the
+road), and none has a real app — just long web forms and phone lines. HazardHub
 does the parts people get stuck on: the photo, the exact location, the county, and
-the routing — then hands you a finished report to send in one tap.
+the routing — then hands you a finished report to send in one tap. It started with
+potholes (the most common complaint) and now covers any road hazard.
 
 ## Features
 
-- **📷 Photo** of the pothole (camera or library).
+- **📷 Photo** of the hazard (camera or library).
 - **📍 GPS → county** — one tap resolves your exact spot + address + county on-device.
 - **Severity + details**, then smart **agency routing** (with a one-tap override for highways).
 - **One-tap hand-off** — opens the agency form, dials the phone, or opens the spot in Maps,
@@ -25,10 +27,12 @@ the routing — then hands you a finished report to send in one tap.
 
 ## Honest scope
 
-PotholePal is a reporting **assistant**, not a submit pipe. MoDOT's form is
-CAPTCHA-protected with no public API, and the City/County have no API — so no app
-can legitimately auto-file. PotholePal does the capture/locate/route/compose work and
-you tap the final send. The app says so in Settings. Not affiliated with any agency.
+HazardHub is a reporting **assistant**, not a submit pipe. MoDOT's report form is
+CAPTCHA-protected with no public API, and the City/County have no API — so no app can
+legitimately auto-file in St. Louis. (MoDOT's mobile app is read-only traveler info;
+its one app-based pothole path, "Pothole CPR" via Waze, is Kansas City only.)
+HazardHub does the capture/locate/route/compose work and you tap the final send. The
+app says so in Settings. Not affiliated with any agency.
 
 ## Architecture
 

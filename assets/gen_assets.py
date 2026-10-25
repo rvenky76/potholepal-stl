@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate PotholePal STL assets. uv run --with pillow python assets/gen_assets.py
+"""Generate HazardHub STL assets. uv run --with pillow python assets/gen_assets.py
 Design: a road surface with a dark pothole and an orange location pin over it."""
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -52,10 +52,10 @@ def splash(W=1284, H=2778):
     d = ImageDraw.Draw(img)
     S = int(min(W, H)*0.42)
     img.alpha_composite(icon(S), ((W-S)//2, int(H*0.33)))
-    f = font(int(S*0.2)); t = 'PotholePal'
+    f = font(int(S*0.2)); t = 'HazardHub'
     b = d.textbbox((0,0), t, font=f)
     d.text(((W-(b[2]-b[0]))//2, int(H*0.33)+S+int(S*0.1)), t, font=f, fill=TEXT)
-    fs = font(int(S*0.09)); s = 'Report a pothole in St. Louis'
+    fs = font(int(S*0.09)); s = 'Report a road hazard in St. Louis'
     bs = d.textbbox((0,0), s, font=fs)
     d.text(((W-(bs[2]-bs[0]))//2, int(H*0.33)+S+int(S*0.36)), s, font=fs, fill=ACCENT)
     return img

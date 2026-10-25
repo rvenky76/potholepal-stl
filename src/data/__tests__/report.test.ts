@@ -1,5 +1,5 @@
 import type { PotholeReport } from '@/types/report';
-import { composeReportText, mapsLink, telLink, mailtoLink, formLink } from '../report';
+import { composeReportText, mapsLink, telLink, mailtoLink, formLink, reportTitle } from '../report';
 
 const base: PotholeReport = {
   id: 'r1',
@@ -40,5 +40,21 @@ describe('hand-off links', () => {
   it('city has a form url, county does not', () => {
     expect(formLink(base)).toContain('stlouis-mo.gov');
     expect(formLink({ ...base, target: 'stlouis_county' })).toBeUndefined();
+  });
+});
+
+describe('hazard type', () => {
+  it('defaults to a pothole report when hazardType is unset', () => {
+    expect(reportTitle(base)).toBe('Pothole');
+    expect(composeReportText(base)).toContain('Pothole report');
+  });
+  it('uses the hazard noun in the report title + body', () => {
+    const tree: PotholeReport = { ...base, hazardType: 'tree' };
+    expect(reportTitle(tree)).toBe('Fallen tree or limb in the roadway');
+    expect(composeReportText(tree)).toContain('Fallen tree or limb in the roadway report');
+  });
+  it('embeds the hazard noun in the mailto subject', () => {
+    const flood: PotholeReport = { ...base, hazardType: 'flooding' };
+    expect(mailtoLink(flood)).toContain(encodeURIComponent('Water / flooding over the roadway report'));
   });
 });

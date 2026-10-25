@@ -13,7 +13,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 
-import type { Agency, PotholeReport, Severity } from '@/types/report';
+import type { Agency, HazardType, PotholeReport, Severity } from '@/types/report';
+import { HAZARDS } from '@/types/report';
 import { AGENCIES, routeAgency } from '@/data/agencies';
 import { resolveCurrentLocation } from '@/data/location';
 import { composeReportText, formLink, mailtoLink, mapsLink, telLink } from '@/data/report';
@@ -27,6 +28,10 @@ const SEVERITIES: { value: Severity; label: string }[] = [
   { value: 'large', label: 'Large' },
 ];
 
+const HAZARD_ORDER: HazardType[] = [
+  'pothole', 'tree', 'flooding', 'dead_animal', 'signal', 'sign', 'debris', 'other',
+];
+
 export default function ReportScreen() {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
@@ -34,6 +39,7 @@ export default function ReportScreen() {
   const { saveReport } = useStore();
 
   const [photoUri, setPhotoUri] = useState<string | undefined>();
+  const [hazardType, setHazardType] = useState<HazardType>('pothole');
   const [loc, setLoc] = useState<PotholeReport['location']>(null);
   const [address, setAddress] = useState<string | undefined>();
   const [city, setCity] = useState<string | undefined>();
@@ -87,6 +93,7 @@ export default function ReportScreen() {
   const buildReport = (): PotholeReport => ({
     id: `rep_${Date.now()}`,
     createdAt: Date.now(),
+    hazardType,
     photoUri,
     location: loc,
     address,
@@ -122,11 +129,36 @@ export default function ReportScreen() {
       style={{ backgroundColor: colors.bg }}
       contentContainerStyle={{ padding: spacing.lg, paddingBottom: insets.bottom + spacing.xl, gap: spacing.lg }}
     >
-      {/* 1. Photo */}
+      {/* 1. Hazard type */}
       <Card>
-        <SectionTitle>1 · Photo (optional)</SectionTitle>
+        <SectionTitle>1 · What are you reporting?</SectionTitle>
+        <View style={styles.rowButtons}>
+          {HAZARD_ORDER.map((h) => {
+            const meta = HAZARDS[h];
+            const active = hazardType === h;
+            return (
+              <Pressable
+                key={h}
+                onPress={() => setHazardType(h)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+                accessibilityLabel={`Hazard type ${meta.label}`}
+                style={[styles.hazard, active && styles.sevActive]}
+              >
+                <Text style={[styles.sevText, active && styles.sevTextActive]}>
+                  {meta.emoji} {meta.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </Card>
+
+      {/* 2. Photo */}
+      <Card>
+        <SectionTitle>2 · Photo (optional)</SectionTitle>
         {photoUri ? (
-          <Image source={{ uri: photoUri }} style={styles.photo} accessibilityLabel="Pothole photo" />
+          <Image source={{ uri: photoUri }} style={styles.photo} accessibilityLabel={`${HAZARDS[hazardType].label} photo`} />
         ) : (
           <View style={[styles.photoPlaceholder, { borderColor: colors.border }]}>
             <Text style={styles.muted}>No photo yet</Text>
@@ -142,9 +174,9 @@ export default function ReportScreen() {
         </View>
       </Card>
 
-      {/* 2. Location */}
+      {/* 3. Location */}
       <Card>
-        <SectionTitle>2 · Location</SectionTitle>
+        <SectionTitle>3 · Location</SectionTitle>
         {loc ? (
           <>
             <Text style={styles.body}>
@@ -157,7 +189,7 @@ export default function ReportScreen() {
             </Text>
           </>
         ) : (
-          <Text style={styles.muted}>Tap to pin exactly where the pothole is.</Text>
+          <Text style={styles.muted}>Tap to pin exactly where the hazard is.</Text>
         )}
         <View style={{ marginTop: spacing.md }}>
           {locating ? (
@@ -172,9 +204,9 @@ export default function ReportScreen() {
         {locMsg ? <Text style={[styles.muted, { color: colors.warn, marginTop: spacing.sm }]}>{locMsg}</Text> : null}
       </Card>
 
-      {/* 3. Severity */}
+      {/* 4. Severity */}
       <Card>
-        <SectionTitle>3 · How bad is it?</SectionTitle>
+        <SectionTitle>4 · How bad is it?</SectionTitle>
         <View style={styles.rowButtons}>
           {SEVERITIES.map((s) => (
             <Pressable
@@ -191,23 +223,23 @@ export default function ReportScreen() {
         </View>
       </Card>
 
-      {/* 4. Details */}
+      {/* 5. Details */}
       <Card>
-        <SectionTitle>4 · Details (optional)</SectionTitle>
+        <SectionTitle>5 · Details (optional)</SectionTitle>
         <TextInput
           value={note}
           onChangeText={setNote}
-          placeholder="Nearest intersection, lane, landmark…"
+          placeholder={HAZARDS[hazardType].detailHint}
           placeholderTextColor={colors.textMuted}
-          accessibilityLabel="Details about the pothole"
+          accessibilityLabel={`Details about the ${HAZARDS[hazardType].label}`}
           style={styles.input}
           multiline
         />
       </Card>
 
-      {/* 5. Who to report to */}
+      {/* 6. Who to report to */}
       <Card>
-        <SectionTitle>5 · Report to</SectionTitle>
+        <SectionTitle>6 · Report to</SectionTitle>
         <Text style={styles.body}>{target.name}</Text>
         <Text style={styles.muted}>{target.covers}</Text>
         <Text style={[styles.muted, { marginTop: spacing.xs }]}>
@@ -230,11 +262,11 @@ export default function ReportScreen() {
         </View>
       </Card>
 
-      {/* 6. Send */}
+      {/* 7. Send */}
       <Card>
-        <SectionTitle>6 · Send your report</SectionTitle>
+        <SectionTitle>7 · Send your report</SectionTitle>
         <Text style={[styles.muted, { marginBottom: spacing.sm }]}>
-          PotholePal prepares the full report. Pick how to send it — it opens the agency with your
+          HazardHub prepares the full report. Pick how to send it — it opens the agency with your
           details ready (attach the photo when prompted).
         </Text>
         <View style={{ gap: spacing.sm }}>
@@ -295,6 +327,15 @@ const makeStyles = (colors: Palette) =>
       alignItems: 'center',
     },
     sevActive: { backgroundColor: colors.accent, borderColor: colors.accent },
+    hazard: {
+      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.md,
+      borderRadius: radius.sm,
+      backgroundColor: colors.surfaceAlt,
+      borderWidth: 1,
+      borderColor: colors.border,
+      alignItems: 'center',
+    },
     sevText: { color: colors.text, fontWeight: '700' },
     sevTextActive: { color: colors.bg },
     input: {

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# build-apk.sh — build an installable Android APK for PotholePal STL via EAS.
+# build-apk.sh — build an installable Android APK for HazardHub STL via EAS.
 set -euo pipefail
 
 PROJECT_DIR="/Users/tvxr2/projects/potholepal-stl"

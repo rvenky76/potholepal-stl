@@ -24,7 +24,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: 'Report a pothole', tabBarLabel: 'Report', tabBarIcon: icon('🕳️') }}
+        options={{ title: 'Report a road hazard', tabBarLabel: 'Report', tabBarIcon: icon('🚧') }}
       />
       <Tabs.Screen
         name="history"

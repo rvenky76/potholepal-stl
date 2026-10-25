@@ -1,13 +1,17 @@
-# PotholePal STL — Congressional App Challenge Submission
+# HazardHub STL — Congressional App Challenge Submission
 
 ## What is your app and what does it do?
 
-**PotholePal STL** turns reporting a pothole from a frustrating chore into a
-15-second task. Point your phone at the pothole, take a photo, and tap "Use my
+**HazardHub STL** turns reporting a road hazard from a frustrating chore into a
+15-second task. Pick what you're reporting — a pothole, a downed tree or limb,
+flooding over the road, a dead animal, a dead traffic signal or street light, a
+knocked-down sign, or debris — take a photo, and tap "Use my
 location" — the app pins the exact GPS spot, figures out which county you're in,
 and routes your report to the right agency (the City of St. Louis, St. Louis
 County, or MoDOT for state highways). Then it hands you a fully-written report and
-opens the agency's form, phone, or map so you can send it in one tap.
+opens the agency's form, phone, or map so you can send it in one tap. It started as a
+pothole reporter (the single most common road complaint) and the same capture →
+locate → route → compose flow works for any road hazard.
 
 ## What problem does it solve, and why does it matter?
 
@@ -21,13 +25,13 @@ who owns the road, and none of them has a real mobile app:
 
 So a resident who hits a pothole has to figure out *which* of three agencies owns
 that stretch of road, find the right form, and type in a location they're trying to
-describe from memory. Most people just don't — and the pothole stays. PotholePal
+describe from memory. Most people just don't — and the pothole stays. HazardHub
 removes every one of those friction points: the photo, the exact location, the
 county, and the routing are all done for you.
 
 ## How does it work? (technical summary)
 
-PotholePal is built with **React Native, Expo (SDK 52), and TypeScript** — one
+HazardHub is built with **React Native, Expo (SDK 52), and TypeScript** — one
 codebase for Android, iOS, and web.
 
 - **Camera + GPS capture.** `expo-image-picker` for the photo; `expo-location` for a
@@ -47,13 +51,15 @@ codebase for Android, iOS, and web.
 
 ## An honest note on "reporting"
 
-PotholePal does **not** silently submit on your behalf — and that's deliberate, not a
-shortcut. MoDOT's form is CAPTCHA-protected with no public API, and the City/County
-have no API either, so there is no legitimate way for an app to auto-file a report.
-Pretending to would be dishonest and could leave someone thinking a hazard was
-reported when it wasn't. Instead, PotholePal does the hard 90% — capture, locate,
-route, and compose — and hands the final send to you with everything ready. The app
-says exactly this in Settings.
+HazardHub does **not** silently submit on your behalf — and that's deliberate, not a
+shortcut. MoDOT's report form is CAPTCHA-protected with no public API, and the
+City/County have no API either, so there is no legitimate way for an app to auto-file a
+report here. (MoDOT's own mobile app is read-only traveler info, and its one app-based
+pothole path — "Pothole CPR" via Waze — is a Kansas City District program, not a
+St. Louis one.) Pretending to auto-file would be dishonest and could leave someone
+thinking a hazard was reported when it wasn't. Instead, HazardHub does the hard 90% —
+capture, locate, route, and compose — and hands the final send to you with everything
+ready. The app says exactly this in Settings.
 
 ## What was the hardest part, and what did I learn?
 
@@ -69,8 +75,9 @@ seams between systems rather than hiding them.
 
 - A roads dataset so routing is exact per-street, not just per-county.
 - Status follow-up (store the agency's confirmation number, remind to re-check).
-- Other road hazards: downed signs, broken lights, flooding, missing curb cuts
-  (an accessibility angle).
+- More hazard categories (e.g. missing curb cuts — an accessibility angle) on top
+  of the potholes, trees, flooding, dead animals, signal/sign failures, and debris
+  the app already covers.
 
 ---
 

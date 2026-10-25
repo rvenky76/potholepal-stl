@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PotholePal architecture diagrams. uv run --with pillow python assets/gen_diagrams.py -> demo/diagrams/"""
+"""HazardHub architecture diagrams. uv run --with pillow python assets/gen_diagrams.py -> demo/diagrams/"""
 import os
 from PIL import Image, ImageDraw, ImageFont
 
@@ -34,8 +34,8 @@ def title(d,s,sub=None):
 
 # 1: the 4-step pipeline
 def d1():
-    img,d=canvas(); title(d,'Four taps, not a scavenger hunt','PotholePal does the hard 90%')
-    steps=[('📷 Capture','photo of the pothole',ACCENT),
+    img,d=canvas(); title(d,'Four taps, not a scavenger hunt','HazardHub does the hard 90%')
+    steps=[('📷 Capture','photo of the hazard',ACCENT),
            ('📍 Locate','GPS + reverse-geocode to county, on-device',OK),
            ('🧭 Route','City / County / MoDOT by who owns the road',ACCENT),
            ('📨 Send','opens the agency form / call with report ready',OK)]
@@ -66,11 +66,11 @@ def d2():
     img,d=canvas(); title(d,'Honest about the seams','An assistant, not a fake submit button')
     box(d,200,210,1200,180,fill=SURFACE,outline=WARN,width=2)
     ctext(d,800,232,'Why it hands off instead of auto-submitting',font(26,True),WARN)
-    ltext(d,250,286,'• MoDOT\u2019s form is CAPTCHA-protected with no public API',font(22),MUTED)
-    ltext(d,250,322,'• The City & County have no reporting API either',font(22),MUTED)
-    ltext(d,250,358,'• So no app can legitimately file on your behalf — faking it would mislead',font(22),MUTED)
+    ltext(d,250,286,'• MoDOT\u2019s report form is CAPTCHA-protected with no public API',font(22),MUTED)
+    ltext(d,250,322,'• No St. Louis-area reporting app; the City & County have no API either',font(22),MUTED)
+    ltext(d,250,358,'• So no app can legitimately file for you here — faking it would mislead',font(22),MUTED)
     box(d,200,430,1200,170,fill=SURFACE,outline=OK,width=2)
-    ctext(d,800,452,'What PotholePal does instead',font(26,True),OK)
+    ctext(d,800,452,'What HazardHub does instead',font(26,True),OK)
     ltext(d,250,506,'• Does the capture, locate, route, and compose — the tedious 90%',font(22),MUTED)
     ltext(d,250,542,'• Opens the right agency with your report ready; you tap send',font(22),MUTED)
     box(d,200,640,1200,150,fill=SURFACE2)

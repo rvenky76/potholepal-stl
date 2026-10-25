@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""PotholePal CAC deck. uv run --with python-pptx --with pillow python assets/build_deck.py
-Output: demo/PotholePal-CAC-deck.pptx"""
+"""HazardHub CAC deck. uv run --with python-pptx --with pillow python assets/build_deck.py
+Output: demo/HazardHub-CAC-deck.pptx"""
 import os
 from pptx import Presentation
 from pptx.util import Inches, Pt
@@ -11,7 +11,7 @@ from PIL import Image
 
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIA=os.path.join(ROOT,'demo','diagrams'); SHOT=os.path.join(ROOT,'demo')
-OUT=os.path.join(ROOT,'demo','PotholePal-CAC-deck.pptx')
+OUT=os.path.join(ROOT,'demo','HazardHub-CAC-deck.pptx')
 BG=RGBColor(0x15,0x20,0x2B); ACCENT=RGBColor(0xF2,0xA3,0x3C); TEXT=RGBColor(0xF1,0xF6,0xFB); MUTED=RGBColor(0x9B,0xB0,0xC4)
 
 prs=Presentation(); prs.slide_width=Inches(13.333); prs.slide_height=Inches(7.5)
@@ -35,9 +35,9 @@ def pic(s,path,x,y,w,h):
 s=prs.slides.add_slide(BLANK); bg(s); bar(s,y=0,h=0.2)
 p=os.path.join(SHOT,'screen-report.png')
 if os.path.exists(p): pic(s,p,9.3,1.0,3.3,5.5)
-tb(s,0.9,2.0,8.0,1.2,'PotholePal STL',56,TEXT,bold=True)
-tb(s,0.9,3.2,8.0,0.8,'Report a St. Louis pothole in 15 seconds',23,ACCENT)
-tb(s,0.9,4.1,8.0,1.4,'Snap a photo, pin the spot, and PotholePal routes it to the right\nagency with a report ready to send.',20,MUTED,ls=1.2)
+tb(s,0.9,2.0,8.0,1.2,'HazardHub STL',56,TEXT,bold=True)
+tb(s,0.9,3.2,8.0,0.8,'Report any St. Louis road hazard in 15 seconds',23,ACCENT)
+tb(s,0.9,4.1,8.0,1.4,'Snap a photo, pin the spot, and HazardHub routes it to the right\nagency with a report ready to send.',20,MUTED,ls=1.2)
 tb(s,0.9,6.7,9,0.4,'Congressional App Challenge  ·  React Native / Expo / TypeScript',14,MUTED)
 
 # 2 Problem
@@ -51,7 +51,8 @@ tb(s,0.9,1.9,11.5,4.6,
    '• City of St. Louis — Citizens\u2019 Service Bureau web form + phone\n'
    '• St. Louis County — a separate phone line\n\n'
    'So a resident has to guess which agency owns the road, find the form, and\n'
-   'describe a location from memory. Most people just don\u2019t — and the pothole stays.',
+   'describe a location from memory. Most people just don\u2019t — and the pothole stays.\n'
+   '(Same friction for a downed tree, flooding, a dead deer, or a dark signal.)',
    22,MUTED,ls=1.25)
 
 # 3 flow diagram

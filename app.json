@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "PotholePal STL",
+    "name": "HazardHub STL",
     "slug": "potholepal-stl",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "potholepal",
+    "scheme": "hazardhub",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "icon": "./assets/icon.png",
@@ -16,14 +16,19 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "PotholePal uses your location to pin where the pothole is and find the right county to report it to.",
-        "NSCameraUsageDescription": "PotholePal uses the camera so you can photograph the pothole for your report.",
-        "NSPhotoLibraryUsageDescription": "PotholePal lets you attach a photo of the pothole from your library."
+        "NSLocationWhenInUseUsageDescription": "HazardHub uses your location to pin where the hazard is and find the right county to report it to.",
+        "NSCameraUsageDescription": "HazardHub uses the camera so you can photograph the hazard for your report.",
+        "NSPhotoLibraryUsageDescription": "HazardHub lets you attach a photo of the hazard from your library."
       }
     },
     "android": {
       "package": "com.potholepal.stl",
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION", "CAMERA"],
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#15202B"
@@ -41,19 +46,28 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "PotholePal uses your location to pin where the pothole is and find the right county to report it to."
+          "locationWhenInUsePermission": "HazardHub uses your location to pin where the hazard is and find the right county to report it to."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "PotholePal lets you attach a photo of the pothole from your library.",
-          "cameraPermission": "PotholePal uses the camera so you can photograph the pothole for your report."
+          "photosPermission": "HazardHub lets you attach a photo of the hazard from your library.",
+          "cameraPermission": "HazardHub uses the camera so you can photograph the hazard for your report."
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "22d8f160-b917-4bd7-8659-2de8d014a96e"
+      }
+    },
+    "owner": "budvenky"
   }
 }
