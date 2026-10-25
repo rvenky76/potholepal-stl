@@ -48,24 +48,47 @@ export default function ReportScreen() {
   const [note, setNote] = useState('');
   const [locating, setLocating] = useState(false);
   const [locMsg, setLocMsg] = useState<string | null>(null);
+  const [photoMsg, setPhotoMsg] = useState<string | null>(null);
   const [agencyOverride, setAgencyOverride] = useState<Agency | null>(null);
 
   const routedAgency: Agency = agencyOverride ?? routeAgency(county, city);
   const target = AGENCIES[routedAgency];
 
   const takePhoto = async () => {
-    const perm = await ImagePicker.requestCameraPermissionsAsync();
-    if (!perm.granted) {
-      setLocMsg('Camera permission denied — you can still report without a photo.');
-      return;
+    setPhotoMsg(null);
+    try {
+      const perm = await ImagePicker.requestCameraPermissionsAsync();
+      if (!perm.granted) {
+        setPhotoMsg(
+          perm.canAskAgain === false
+            ? 'Camera permission is off — enable it in Settings, or use “Choose” instead.'
+            : 'Camera permission denied — you can still report without a photo, or use “Choose”.',
+        );
+        return;
+      }
+      const res = await ImagePicker.launchCameraAsync({
+        mediaTypes: ['images'],
+        quality: 0.5,
+      });
+      if (!res.canceled && res.assets[0]) setPhotoUri(res.assets[0].uri);
+    } catch (e) {
+      setPhotoMsg(
+        `Couldn’t open the camera (${e instanceof Error ? e.message : 'unknown error'}). Try “Choose” to pick a photo instead.`,
+      );
     }
-    const res = await ImagePicker.launchCameraAsync({ quality: 0.5 });
-    if (!res.canceled && res.assets[0]) setPhotoUri(res.assets[0].uri);
   };
 
   const pickPhoto = async () => {
-    const res = await ImagePicker.launchImageLibraryAsync({ quality: 0.5 });
-    if (!res.canceled && res.assets[0]) setPhotoUri(res.assets[0].uri);
+    setPhotoMsg(null);
+    try {
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        quality: 0.5,
+      });
+      if (!res.canceled && res.assets[0]) setPhotoUri(res.assets[0].uri);
+    } catch (e) {
+      setPhotoMsg(`Couldn’t open your photos (${e instanceof Error ? e.message : 'unknown error'}).`);
+    }
   };
 
   const getLocation = async () => {
@@ -172,6 +195,14 @@ export default function ReportScreen() {
             <PrimaryButton label="🖼️ Choose" tone="surface" onPress={pickPhoto} />
           </View>
         </View>
+        {photoMsg ? (
+          <Text
+            accessibilityLiveRegion="polite"
+            style={[styles.muted, { color: colors.warn, marginTop: spacing.sm }]}
+          >
+            {photoMsg}
+          </Text>
+        ) : null}
       </Card>
 
       {/* 3. Location */}
