@@ -214,7 +214,10 @@ export default function ReportScreen() {
                 accessibilityLabel={`Hazard type ${meta.label}`}
                 style={[styles.hazard, active && styles.sevActive]}
               >
-                <Text style={[styles.sevText, active && styles.sevTextActive]}>
+                <Text
+                  numberOfLines={1}
+                  style={[styles.sevText, active && styles.sevTextActive]}
+                >
                   {meta.emoji} {meta.label}
                 </Text>
               </Pressable>
@@ -357,7 +360,7 @@ export default function ReportScreen() {
               accessibilityLabel={`Severity ${s.label}`}
               style={[styles.sev, severity === s.value && styles.sevActive]}
             >
-              <Text style={[styles.sevText, severity === s.value && styles.sevTextActive]}>{s.label}</Text>
+              <Text numberOfLines={1} style={[styles.sevText, severity === s.value && styles.sevTextActive]}>{s.label}</Text>
             </Pressable>
           ))}
         </View>
@@ -394,7 +397,7 @@ export default function ReportScreen() {
               accessibilityState={{ selected: routedAgency === a }}
               style={[styles.sev, routedAgency === a && styles.sevActive]}
             >
-              <Text style={[styles.sevText, routedAgency === a && styles.sevTextActive]}>
+              <Text numberOfLines={1} style={[styles.sevText, routedAgency === a && styles.sevTextActive]}>
                 {a === 'modot' ? 'MoDOT' : a === 'stlouis_city' ? 'City' : 'County'}
               </Text>
             </Pressable>
@@ -462,12 +465,15 @@ const makeStyles = (colors: Palette) =>
     rowButtons: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm, flexWrap: 'wrap' },
     sev: {
       flexGrow: 1,
+      minWidth: 88,
       paddingVertical: spacing.md,
+      paddingHorizontal: spacing.md,
       borderRadius: radius.sm,
       backgroundColor: colors.surfaceAlt,
       borderWidth: 1,
       borderColor: colors.border,
       alignItems: 'center',
+      justifyContent: 'center',
     },
     sevActive: { backgroundColor: colors.accent, borderColor: colors.accent },
     hazard: {
@@ -479,7 +485,7 @@ const makeStyles = (colors: Palette) =>
       borderColor: colors.border,
       alignItems: 'center',
     },
-    sevText: { ...type.label, color: colors.text },
+    sevText: { ...type.label, color: colors.text, textAlign: 'center' },
     sevTextActive: { color: colors.bg },
     hint: {
       flexDirection: 'row',

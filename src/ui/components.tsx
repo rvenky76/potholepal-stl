@@ -60,7 +60,7 @@ export function PrimaryButton({
       ]}
     >
       {icon ? <Ionicons name={icon} size={19} color={fg} style={{ marginRight: 8 }} /> : null}
-      <Text style={[type.label, { color: fg }]}>{label}</Text>
+      <Text numberOfLines={1} style={[type.label, { color: fg, flexShrink: 1, textAlign: 'center' }]}>{label}</Text>
     </Pressable>
   );
 }

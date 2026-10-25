@@ -64,14 +64,14 @@ export const fonts = {
  *  We do NOT also set fontWeight — pairing a custom fontFamily with fontWeight is what
  *  triggers the blank-text bug on Android. */
 export const type = {
-  display: { fontFamily: fonts.extrabold, fontSize: 30, letterSpacing: -0.5 },
-  title: { fontFamily: fonts.bold, fontSize: 22, letterSpacing: -0.3 },
-  heading: { fontFamily: fonts.bold, fontSize: 17, letterSpacing: -0.2 },
-  body: { fontFamily: fonts.regular, fontSize: 16, letterSpacing: -0.1 },
-  bodyMedium: { fontFamily: fonts.medium, fontSize: 16, letterSpacing: -0.1 },
-  label: { fontFamily: fonts.bold, fontSize: 15, letterSpacing: -0.1 },
-  caption: { fontFamily: fonts.medium, fontSize: 13 },
-  overline: { fontFamily: fonts.bold, fontSize: 12, letterSpacing: 0.6, textTransform: 'uppercase' as const },
+  display: { fontFamily: fonts.extrabold, fontSize: 30, lineHeight: 38, letterSpacing: -0.5, includeFontPadding: false },
+  title: { fontFamily: fonts.bold, fontSize: 22, lineHeight: 30, letterSpacing: -0.3, includeFontPadding: false },
+  heading: { fontFamily: fonts.bold, fontSize: 17, lineHeight: 24, includeFontPadding: false },
+  body: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 23, letterSpacing: -0.1, includeFontPadding: false },
+  bodyMedium: { fontFamily: fonts.medium, fontSize: 16, lineHeight: 23, letterSpacing: -0.1, includeFontPadding: false },
+  label: { fontFamily: fonts.bold, fontSize: 15, lineHeight: 22, includeFontPadding: false },
+  caption: { fontFamily: fonts.medium, fontSize: 13, lineHeight: 18, includeFontPadding: false },
+  overline: { fontFamily: fonts.bold, fontSize: 12, lineHeight: 16, letterSpacing: 0.6, textTransform: 'uppercase' as const, includeFontPadding: false },
 } as const;
 
 export type ThemeMode = 'dark' | 'light' | 'system';

@@ -132,4 +132,50 @@ def d4():
     img.save(os.path.join(OUT,'04-map.png'))
 
 
-d1(); d2(); d3(); d4(); print('Wrote 4 diagrams to', OUT)
+# 5: end-to-end user flow for submitting a report — split across two pages
+def d5():
+    def node(d,cx,cy,w,h,lines,fill=SURFACE,outline=ACCENT,wdt=3,r=16,sub_i=None,fsz=24):
+        box(d,cx-w/2,cy-h/2,w,h,fill=fill,outline=outline,width=wdt,r=r)
+        n=len(lines); lh=34
+        y0=cy-(n*lh)/2+6
+        for i,ln in enumerate(lines):
+            f=font(fsz,True) if (sub_i is None or i<sub_i) else font(20)
+            col=TEXT if (sub_i is None or i<sub_i) else MUTED
+            ctext(d,cx,y0+i*lh,ln,f,col)
+
+    def diamond(d,cx,cy,w,h,label,col=WARN):
+        pts=[(cx,cy-h/2),(cx+w/2,cy),(cx,cy+h/2),(cx-w/2,cy)]
+        d.polygon(pts,fill=SURFACE)
+        for i in range(len(pts)): d.line([pts[i],pts[(i+1)%len(pts)]],fill=col,width=3)
+        ctext(d,cx,cy-13,label,font(21,True),col)
+
+    cx=800; W1=520; H1=96; RED=(235,87,87)
+
+    # ---- Page 1: capture ----
+    img,d=canvas(); title(d,'User flow (1 of 2): capture','Open the app \u2192 pin the hazard')
+    node(d,cx,230,W1,H1,['1 · Open app','pick what you\u2019re reporting'],sub_i=1)
+    arrow(d,cx,278,cx,330)
+    diamond(d,cx,385,420,104,'Urgent? accident / power line',WARN)
+    arrow(d,cx+210,385,cx+360,385,color=RED); ltext(d,cx+225,350,'yes',font(19),RED)
+    node(d,cx+560,385,420,100,['Call 911 first','the app does not dispatch help'],outline=RED,sub_i=1,fsz=21)
+    arrow(d,cx,437,cx,500); ltext(d,cx+16,455,'no / after calling',font(18),MUTED)
+    node(d,cx,555,W1,H1,['2 · Take / choose photo','AI suggests a type (optional)'],sub_i=1)
+    arrow(d,cx,603,cx,660)
+    node(d,cx,715,W1,H1,['3 · Use my location','GPS \u2192 county, on-device'],sub_i=1,outline=OK)
+    ctext(d,cx,800,'\u2193  continues on page 2',font(22,True),ACCENT)
+    img.save(os.path.join(OUT,'05-userflow-1.png'))
+
+    # ---- Page 2: route + send ----
+    img,d=canvas(); title(d,'User flow (2 of 2): route & send','Route to the right agency \u2192 you send it')
+    ctext(d,cx,150,'\u2193  continued from page 1',font(22,True),ACCENT)
+    node(d,cx,235,W1,H1,['4 · Severity + details','small / medium / large + a note'],sub_i=1)
+    arrow(d,cx,283,cx,335)
+    node(d,cx,390,W1,H1,['6 · Report to','auto-routed \u00b7 override City / County / MoDOT'],sub_i=1,fsz=22)
+    arrow(d,cx,438,cx,490)
+    node(d,cx,545,W1,H1,['7 · Send','opens the agency form / call / map'],sub_i=1,outline=OK)
+    arrow(d,cx,593,cx,645)
+    node(d,cx,700,W1,H1,['You tap send \u2014 report prefilled','saved to History + the hazard map'],sub_i=1,outline=OK)
+    img.save(os.path.join(OUT,'05-userflow-2.png'))
+
+
+d1(); d2(); d3(); d4(); d5(); print('Wrote 5 diagrams to', OUT)
