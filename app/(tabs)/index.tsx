@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -19,9 +19,10 @@ import { HAZARDS } from '@/types/report';
 import { AGENCIES, routeAgency } from '@/data/agencies';
 import { resolveCurrentLocation } from '@/data/location';
 import { composeReportText, formLink, mailtoLink, mapsLink, telLink } from '@/data/report';
+import { classifyPhoto, type Prediction } from '@/data/classifier';
 import { useStore } from '@/store/AppStore';
 import { Card, PrimaryButton, SectionTitle } from '@/ui/components';
-import { radius, spacing, type, useTheme, type Palette } from '@/ui/theme';
+import { fonts, radius, spacing, type, useTheme, type Palette } from '@/ui/theme';
 
 const SEVERITIES: { value: Severity; label: string }[] = [
   { value: 'small', label: 'Small' },
@@ -41,10 +42,13 @@ export default function ReportScreen() {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
-  const { saveReport } = useStore();
+  const { saveReport, settings } = useStore();
 
   const [photoUri, setPhotoUri] = useState<string | undefined>();
   const [hazardType, setHazardType] = useState<HazardType>('pothole');
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiTop, setAiTop] = useState<Prediction | null>(null);
+  const [aiMsg, setAiMsg] = useState<string | null>(null);
   const [loc, setLoc] = useState<PotholeReport['location']>(null);
   const [address, setAddress] = useState<string | undefined>();
   const [city, setCity] = useState<string | undefined>();
@@ -58,6 +62,43 @@ export default function ReportScreen() {
 
   const routedAgency: Agency = agencyOverride ?? routeAgency(county, city);
   const target = AGENCIES[routedAgency];
+
+  // Run the on-device Teachable Machine classifier when a photo is captured.
+  useEffect(() => {
+    if (!photoUri || !settings.aiEnabled) {
+      setAiTop(null);
+      setAiMsg(null);
+      return;
+    }
+    let cancelled = false;
+    setAiBusy(true);
+    setAiTop(null);
+    setAiMsg(null);
+    classifyPhoto(photoUri, settings.aiModelUrl)
+      .then((res) => {
+        if (cancelled) return;
+        if (!res.ok) {
+          setAiMsg(
+            res.reason === 'no_model'
+              ? 'AI suggestion off — add a Teachable Machine model URL in Settings to enable it.'
+              : 'Couldn’t run the AI suggestion — pick the hazard type yourself.',
+          );
+          return;
+        }
+        const top = res.predictions[0];
+        if (top && top.hazardType && top.confidence >= 0.5) {
+          setAiTop(top);
+        } else if (top) {
+          setAiMsg(
+            `AI wasn’t confident (top guess: ${top.label}, ${(top.confidence * 100).toFixed(0)}%). Pick the type yourself.`,
+          );
+        }
+      })
+      .finally(() => !cancelled && setAiBusy(false));
+    return () => {
+      cancelled = true;
+    };
+  }, [photoUri, settings.aiEnabled, settings.aiModelUrl]);
 
   const takePhoto = async () => {
     setPhotoMsg(null);
@@ -230,6 +271,39 @@ export default function ReportScreen() {
           >
             {photoMsg}
           </Text>
+        ) : null}
+        {photoUri && aiBusy ? (
+          <View style={[styles.aiRow, { marginTop: spacing.md }]}>
+            <ActivityIndicator color={colors.accent} />
+            <Text style={styles.muted}>Running on-device AI suggestion…</Text>
+          </View>
+        ) : null}
+        {photoUri && !aiBusy && aiTop && aiTop.hazardType ? (
+          <View style={styles.aiCard}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.aiLabel}>
+                🤖 AI thinks this is {HAZARDS[aiTop.hazardType].emoji} {HAZARDS[aiTop.hazardType].label}
+              </Text>
+              <Text style={styles.muted}>
+                {(aiTop.confidence * 100).toFixed(0)}% confident · a suggestion you can change
+              </Text>
+            </View>
+            {hazardType !== aiTop.hazardType ? (
+              <Pressable
+                onPress={() => setHazardType(aiTop.hazardType!)}
+                accessibilityRole="button"
+                accessibilityLabel={`Use AI suggestion ${HAZARDS[aiTop.hazardType].label}`}
+                style={styles.aiUse}
+              >
+                <Text style={[type.caption, { color: colors.bg, fontFamily: fonts.bold }]}>Use</Text>
+              </Pressable>
+            ) : (
+              <Ionicons name="checkmark-circle" size={22} color={colors.ok} />
+            )}
+          </View>
+        ) : null}
+        {photoUri && !aiBusy && aiMsg ? (
+          <Text style={[styles.muted, { color: colors.textMuted, marginTop: spacing.sm }]}>{aiMsg}</Text>
         ) : null}
       </Card>
 
@@ -418,6 +492,25 @@ const makeStyles = (colors: Palette) =>
       backgroundColor: colors.surfaceAlt,
     },
     hintText: { ...type.caption, flex: 1, color: colors.textMuted, lineHeight: 18 },
+    aiRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+    aiCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.md,
+      marginTop: spacing.md,
+      padding: spacing.md,
+      borderRadius: radius.md,
+      borderWidth: 1,
+      borderColor: colors.accent,
+      backgroundColor: colors.accent + '18',
+    },
+    aiLabel: { ...type.label, color: colors.text },
+    aiUse: {
+      backgroundColor: colors.accent,
+      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.md,
+      borderRadius: radius.sm,
+    },
     input: {
       ...type.body,
       backgroundColor: colors.surfaceAlt,

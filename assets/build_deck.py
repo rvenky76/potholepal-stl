@@ -60,7 +60,7 @@ s=prs.slides.add_slide(BLANK); bg(s); pic(s,os.path.join(DIA,'01-flow.png'),0.5,
 # 4 screens
 s=prs.slides.add_slide(BLANK); bg(s)
 tb(s,0.9,0.5,11.5,0.9,'What it does',40,TEXT,bold=True); bar(s,x=0.9,y=1.4,w=2.2,h=0.06)
-tb(s,0.9,1.15,11.5,0.5,'14 hazard & incident types  ·  one-tap routing  ·  live hazard map',16,ACCENT)
+tb(s,0.9,1.15,11.5,0.5,'14 types  ·  on-device AI suggestion  ·  one-tap routing  ·  hazard map',16,ACCENT)
 shots=[('screen-report.png','14 types · capture · route'),('screen-settings.png','Theme · how it works')]
 x=2.3
 for fn,cap in shots:
@@ -78,19 +78,35 @@ tb(s,0.9,1.9,6.2,4.8,
    20,MUTED,ls=1.2)
 mp=os.path.join(DIA,'04-map.png')
 if os.path.exists(mp): pic(s,mp,7.1,1.9,5.9,4.8)
-# 6 honest  7 arch
+
+# 6 AI
+s=prs.slides.add_slide(BLANK); bg(s)
+tb(s,0.9,0.6,11.5,0.9,'AI that suggests — honestly',40,TEXT,bold=True); bar(s,x=0.9,y=1.5,w=2.2,h=0.06)
+tb(s,0.9,1.9,11.5,4.8,
+   'Take a photo \u2192 an on-device model suggests the hazard type with a confidence %.\n\n'
+   '\u2022 A model I trained on Google\u2019s Teachable Machine \u2014 so it learns the actual\n'
+   '   classes (pothole, flooding, tree\u2026), which a generic model can\u2019t recognize.\n'
+   '\u2022 Runs on-device with TensorFlow.js (pure-JS backend). I switched to it after the\n'
+   '   usual RN ML library turned out incompatible with Expo\u2019s New Architecture.\n'
+   '\u2022 It\u2019s a SUGGESTION with a visible confidence score that the user confirms or\n'
+   '   overrides \u2014 and it says so. An AI that silently mislabels a downed power line\n'
+   '   as a pothole would be worse than no AI.\n\n'
+   'The honest, debuggable version of the feature \u2014 not a magic \u201cdetect anything\u201d badge.',
+   21,MUTED,ls=1.2)
+# 7 honest  8 arch
 for fn in ['02-honest.png','03-arch.png']:
     s=prs.slides.add_slide(BLANK); bg(s); pic(s,os.path.join(DIA,fn),0.5,0.4,12.333,6.7)
-# 8 Close
+# 9 Close
 s=prs.slides.add_slide(BLANK); bg(s); bar(s,y=0,h=0.2)
 tb(s,0.9,1.6,11.5,1.0,'Make reporting so easy people actually do it',34,TEXT,bold=True)
 tb(s,0.9,2.9,11.5,2.8,
    'A real, installable app that turns a multi-step scavenger hunt into a few taps \u2014\n'
-   'across 14 hazard and incident types, with a map of what\u2019s been reported.\n\n'
-   'Next: on-device AI to suggest the hazard type from the photo, a roads dataset for\n'
+   'across 14 hazard and incident types, with an on-device AI suggestion and a map\n'
+   'of what\u2019s been reported.\n\n'
+   'Next: train the model on more photos for sharper suggestions, a roads dataset for\n'
    'exact per-street routing, and a shared backend so the map goes community-wide\n'
    'with a municipal dashboard for faster agency response.',
-   21,MUTED,ls=1.25)
+   21,MUTED,ls=1.2)
 tb(s,0.9,6.5,11.5,0.5,'A community reporting assistant. Not affiliated with MoDOT or the City/County.',15,ACCENT)
 
 prs.save(OUT); print('Wrote',OUT,'-',len(prs.slides._sldIdLst),'slides')

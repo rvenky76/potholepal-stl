@@ -11,11 +11,13 @@ The app pins the exact GPS spot, figures out which county you're in, and routes 
 report to the right agency (the City of St. Louis, St. Louis County, or MoDOT for
 state highways). Then it hands you a fully-written report and opens the agency's form,
 phone, or map so you can send it in one tap. Your located reports also plot as
-color-coded pins on an interactive **hazard map**. For life-safety cases — an accident
-with injuries or a downed power line — the app shows a safety warning and a one-tap
-**Call 911** button, and is explicit that it does not dispatch help itself. It started
-as a pothole reporter (the single most common road complaint) and the same capture →
-locate → route → compose flow now works for any road hazard or incident.
+color-coded pins on an interactive **hazard map**. After you take a photo, an
+on-device **AI model** (trained on Teachable Machine) *suggests* the hazard type with
+a confidence score — a suggestion you can accept or override. For life-safety cases —
+an accident with injuries or a downed power line — the app shows a safety warning and
+a one-tap **Call 911** button, and is explicit that it does not dispatch help itself.
+It started as a pothole reporter (the single most common road complaint) and the same
+capture → locate → route → compose flow now works for any road hazard or incident.
 
 ## What problem does it solve, and why does it matter?
 
@@ -52,6 +54,13 @@ codebase for Android, iOS, and web.
 - **Hazard map.** Saved reports with a location plot as color-coded markers on an
   interactive map (`react-native-maps` on device), auto-fitting to the reports; the
   web build falls back to a located-report list since that library is native-only.
+- **On-device AI suggestion.** After a photo, a **Teachable Machine** image model
+  runs on-device via **TensorFlow.js** (the pure-JS CPU backend — chosen because
+  `tfjs-react-native`/`expo-gl` is incompatible with Expo SDK 52's New Architecture).
+  The photo is resized to 224×224 and normalized to match Teachable Machine, inference
+  returns class probabilities, and the top class (≥50% confidence) is mapped to a
+  hazard type and shown as an overridable suggestion. Honest by design: it only knows
+  the classes the model was trained on and falls back to manual selection otherwise.
 - **Life-safety handling.** Accidents and downed power lines are flagged urgent — the
   app shows a safety banner and a one-tap **Call 911** button, and states plainly that
   it does not dispatch emergency help.
@@ -81,18 +90,28 @@ get stuck on (which agency? what's the exact location? what county?) and then ge
 out of the way. I learned that a good civic app often means being honest about the
 seams between systems rather than hiding them.
 
+The **AI** taught me a second honesty lesson. I wanted on-device image recognition,
+but a generic pre-trained model doesn't know "pothole" vs. "flooding," and the usual
+React-Native ML library (`tfjs-react-native` + `expo-gl`) turned out to be
+incompatible with Expo SDK 52's New Architecture — it would have crashed on device. So
+I switched to TensorFlow.js's pure-JS backend and a model I train myself on Teachable
+Machine, which actually learns my hazard classes. Just as important, I made the AI a
+*suggestion* with a visible confidence score that the user confirms — because an AI
+that silently mislabels a downed power line as a pothole would be worse than no AI. I
+learned that the honest, debuggable version of a feature often beats the flashy one.
+
 ## What would I add next?
 
-- **On-device AI photo classification** — suggest the hazard type and a severity
-  estimate from the photo (an honest *suggestion* the user can override).
+- Train the AI model on a larger, more varied photo set so suggestions are accurate
+  across all 14 categories (today it's as good as the Teachable Machine model behind it).
 - A roads dataset so routing is exact per-street, not just per-county.
 - A shared backend so the hazard map becomes **community-wide** (today it shows your
   own reports), plus status follow-up and notifications to nearby users.
 - A municipal dashboard for agencies to triage reports and measure response time.
 
 These later phases need a server and real multi-user data, so today the map plots the
-reports saved on *your* device — I've kept the app honest about that rather than
-implying a city-wide live feed.
+reports saved on *your* device and the AI runs a model *you* train — I've kept the app
+honest about both rather than implying a city-wide live feed or a magic detector.
 
 ---
 

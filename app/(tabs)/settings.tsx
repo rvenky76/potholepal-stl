@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -75,6 +75,34 @@ export default function SettingsScreen() {
         </Pressable>
       </Card>
 
+      <Card>
+        <SectionTitle icon="sparkles">AI hazard suggestion</SectionTitle>
+        <View style={styles.aiToggleRow}>
+          <Text style={[styles.body, { flex: 1 }]}>Suggest a hazard type from the photo</Text>
+          <Switch
+            value={settings.aiEnabled}
+            onValueChange={(v) => updateSettings({ aiEnabled: v })}
+            trackColor={{ true: colors.accent, false: colors.border }}
+            thumbColor={colors.surface}
+            accessibilityLabel="Toggle AI hazard suggestion"
+          />
+        </View>
+        <Text style={[styles.muted, { marginBottom: spacing.sm }]}>
+          Runs a Teachable Machine model you train, on-device. It only knows the classes you trained
+          and returns a suggestion you can override — it is not a general detector.
+        </Text>
+        <TextInput
+          value={settings.aiModelUrl}
+          onChangeText={(t) => updateSettings({ aiModelUrl: t.trim() })}
+          placeholder="Teachable Machine model URL (https://teachablemachine.withgoogle.com/models/…)"
+          placeholderTextColor={colors.textMuted}
+          autoCapitalize="none"
+          autoCorrect={false}
+          accessibilityLabel="Teachable Machine model URL"
+          style={styles.input}
+        />
+      </Card>
+
       <Text style={styles.footer}>
         HazardHub STL · a community reporting assistant. Not affiliated with MoDOT or the City/County
         of St. Louis.
@@ -100,7 +128,20 @@ const makeStyles = (colors: Palette) =>
     selText: { ...type.label, color: colors.text },
     selTextActive: { color: colors.bg },
     body: { ...type.body, fontSize: 15, color: colors.text, lineHeight: 22 },
+    muted: { ...type.caption, color: colors.textMuted, lineHeight: 18 },
     linkRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.md },
     link: { ...type.label, color: colors.accent },
     footer: { ...type.caption, fontSize: 12, color: colors.textMuted, textAlign: 'center', marginTop: spacing.sm },
+    aiToggleRow: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm },
+    input: {
+      ...type.body,
+      fontSize: 14,
+      backgroundColor: colors.surfaceAlt,
+      borderRadius: radius.sm,
+      borderWidth: 1,
+      borderColor: colors.border,
+      color: colors.text,
+      padding: spacing.md,
+      minHeight: 64,
+    },
   });

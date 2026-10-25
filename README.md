@@ -43,6 +43,10 @@ potholes (the most common complaint) and now covers any road hazard.
   incidents (accident, disabled vehicle, road closure, downed power line).
 - **🚨 Life-safety handling** — accidents and downed power lines show a safety banner
   and a one-tap **Call 911** button. The app is explicit that it does *not* dispatch help.
+- **🤖 On-device AI suggestion** — after a photo, a **Teachable Machine** model you
+  train runs on-device (TensorFlow.js) and *suggests* the hazard type with a
+  confidence score. It's a suggestion you can override, not a general detector —
+  the app says so, and falls back to manual pick when it isn't confident.
 - **📷 Photo** of the hazard (camera or library).
 - **📍 GPS → county** — one tap resolves your exact spot + address + county on-device.
 - **Severity + details**, then smart **agency routing** (with a one-tap override for highways).
@@ -71,6 +75,8 @@ src/
     agencies.ts           agency directory + county→agency routing
     location.ts           GPS fix + reverse-geocode to county (expo-location)
     report.ts             report-text composer + hand-off links
+    classifier.ts         on-device Teachable Machine inference (TensorFlow.js)
+    hazardLabels.ts       model-label → hazard-type mapping (unit-tested)
     storage.ts            AsyncStorage cache
   store/AppStore.tsx      settings (theme) + saved reports
   ui/ theme.tsx (Inter type scale) | components.tsx (icon buttons) | SplashLogo.tsx
@@ -97,6 +103,24 @@ This runs an **EAS cloud build** (nothing is written to this folder). When it
 finishes, EAS prints a build URL with a **Download** button + QR code — that's the
 `.apk` end users install (see [Install on Android](#-install-on-android) above). List
 past builds and their download links with `eas build:list --platform android`.
+
+## Train the AI model (Teachable Machine)
+
+The AI suggestion runs a model **you** train — so it learns your actual hazard
+classes (potholes, flooding, etc.), which a generic model can't recognize.
+
+1. Go to <https://teachablemachine.withgoogle.com/train/image>.
+2. Make one class per hazard, named so it maps (e.g. `Pothole`, `Flooding`,
+   `Fallen tree`, `Accident`, `Power line`). The label→type mapping lives in
+   `src/data/hazardLabels.ts`. Add ~30–50 example photos per class.
+3. **Train Model**, then **Export Model → TensorFlow.js → Upload (shareable link)**.
+   Copy the URL (`https://teachablemachine.withgoogle.com/models/XXXX/`).
+4. In the app: **Settings → AI hazard suggestion → paste the model URL**.
+5. Take a photo — the app downloads the model once, runs inference on-device with
+   TensorFlow.js (pure-JS backend), and suggests a type with a confidence score.
+
+It only knows the classes you trained and makes mistakes, so it is always a
+suggestion the user can override — never an automatic classification.
 
 ## Data sources
 

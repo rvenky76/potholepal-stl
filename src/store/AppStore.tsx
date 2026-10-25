@@ -13,9 +13,13 @@ import { KEYS, readJSON, writeJSON } from '@/data/storage';
 
 export interface AppSettings {
   theme: 'dark' | 'light' | 'system';
+  /** Teachable Machine shareable model URL for AI hazard suggestions (optional). */
+  aiModelUrl?: string;
+  /** Whether to run the AI suggestion after a photo is taken. */
+  aiEnabled: boolean;
 }
 
-const DEFAULT_SETTINGS: AppSettings = { theme: 'system' };
+const DEFAULT_SETTINGS: AppSettings = { theme: 'system', aiModelUrl: '', aiEnabled: true };
 
 interface StoreValue {
   settings: AppSettings;
