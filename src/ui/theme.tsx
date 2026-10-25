@@ -51,19 +51,25 @@ export const radius = { sm: 8, md: 12, lg: 18 } as const;
 export const fonts = {
   regular: 'Inter_400Regular',
   medium: 'Inter_500Medium',
-  semibold: 'Inter_600SemiBold',
+  // SemiBold (600) can render blank on Android via @expo-google-fonts; alias to Bold.
+  semibold: 'Inter_700Bold',
   bold: 'Inter_700Bold',
   extrabold: 'Inter_800ExtraBold',
 } as const;
 
-/** Type scale — display for hero numbers/titles, body for content, caption for meta. */
+/** Type scale — display for hero numbers/titles, body for content, caption for meta.
+ *  NOTE: we intentionally use only Inter Regular / Medium / Bold / ExtraBold here.
+ *  On Android, the SemiBold (600) weight from @expo-google-fonts can silently render
+ *  blank for some labels, so `label` and `heading` use Bold (700), which is reliable.
+ *  We do NOT also set fontWeight — pairing a custom fontFamily with fontWeight is what
+ *  triggers the blank-text bug on Android. */
 export const type = {
   display: { fontFamily: fonts.extrabold, fontSize: 30, letterSpacing: -0.5 },
   title: { fontFamily: fonts.bold, fontSize: 22, letterSpacing: -0.3 },
-  heading: { fontFamily: fonts.semibold, fontSize: 17, letterSpacing: -0.2 },
+  heading: { fontFamily: fonts.bold, fontSize: 17, letterSpacing: -0.2 },
   body: { fontFamily: fonts.regular, fontSize: 16, letterSpacing: -0.1 },
   bodyMedium: { fontFamily: fonts.medium, fontSize: 16, letterSpacing: -0.1 },
-  label: { fontFamily: fonts.semibold, fontSize: 15, letterSpacing: -0.1 },
+  label: { fontFamily: fonts.bold, fontSize: 15, letterSpacing: -0.1 },
   caption: { fontFamily: fonts.medium, fontSize: 13 },
   overline: { fontFamily: fonts.bold, fontSize: 12, letterSpacing: 0.6, textTransform: 'uppercase' as const },
 } as const;
